@@ -5,13 +5,14 @@
     var boardEl = document.getElementById('board');
     var dpadEl = document.getElementById('dpad');
     var stageEl = document.querySelector('.stage');
+    var muteBtn = document.getElementById('muteBtn');
 
     var renderer = new App.Renderer(boardEl);
     var ui = App.UI;
     var game;
 
     ui.init({
-      onStart: function () { game.start(); },
+      onStart: function () { App.Audio.unlock(); game.start(); },
       onResume: function () { game.resume(); },
       onLanguage: function (code) { App.i18n.set(code); }
     });
@@ -25,6 +26,7 @@
     });
 
     App.Input.on('action', function () {
+      App.Audio.unlock();
       if (game.state === App.Game.State.RUNNING ||
           game.state === App.Game.State.PAUSED) {
         game.togglePause();
@@ -46,6 +48,31 @@
     document.addEventListener('visibilitychange', function () {
       if (document.hidden) game.pause();
     });
+
+    function refreshMute() {
+      var m = App.Audio.isMuted();
+      muteBtn.textContent = m ? '\uD83D\uDD07' : '\uD83D\uDD0A';
+      muteBtn.classList.toggle('is-muted', m);
+      muteBtn.setAttribute('aria-label', App.i18n.t(m ? 'audio.off' : 'audio.on'));
+    }
+
+    muteBtn.addEventListener('click', function () {
+      App.Audio.unlock();
+      App.Audio.toggle();
+      refreshMute();
+      if (!App.Audio.isMuted()) App.Audio.tick();
+    });
+
+    window.addEventListener('pointerdown', function () {
+      App.Audio.unlock();
+    }, { once: true, passive: true });
+
+    window.addEventListener('keydown', function () {
+      App.Audio.unlock();
+    }, { once: true });
+
+    App.i18n.onChange(refreshMute);
+    refreshMute();
   }
 
   if (document.readyState === 'loading') {

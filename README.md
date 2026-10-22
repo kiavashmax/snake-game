@@ -3,6 +3,10 @@
 A modular, bilingual (EN / FA) snake game. Pure HTML + CSS + vanilla JS.
 Default language is English; switch instantly from the language pills.
 
+## Version
+
+Current: **v1.1.0**
+
 ## Install / update
 
 Run `setup.bat`. It creates every file from the content blocks stored inside it.
@@ -34,11 +38,16 @@ Just open `index.html`. If fonts fail to load over `file://`, serve the folder
 | Pause            | Space, P, Esc                      |
 | Start / Resume   | Space, Enter, overlay button       |
 
+## Audio
+
+Sound effects are synthesized in real time with the Web Audio API
+(no audio files required). The speaker button in the top-left corner
+toggles mute; the preference is saved in `localStorage`.
+
 ## Adding a language
 
 1. Add `lang/xx.js` via a new block in `setup.bat`, registering the pack:
 
-```js
 (function (App) {
   'use strict';
   App.i18n.register('xx', {
@@ -48,7 +57,6 @@ Just open `index.html`. If fonts fail to load over `file://`, serve the folder
     strings: { /* same keys as lang/en.js */ }
   });
 })(window.App = window.App || {});
-```
 
 2. Add `<script src="lang/xx.js"></script>` to `index.html`.
 
@@ -67,3 +75,14 @@ Numbers that affect gameplay live in `js/core/config.js`:
 - `speed.start` / `speed.max` / `speed.step` -- pacing
 - `input.buffer` -- how many turns can be queued
 - `input.swipe` -- minimum swipe distance in pixels
+
+## Changelog
+
+### v1.1.0
+- Added browser audio via the Web Audio API: eat, die, record, start.
+- Added a mute toggle button (persisted in `localStorage`).
+- Added a version tag in the bottom-right corner.
+- Bundled `LICENSE` (MIT) and `.gitignore`.
+
+### v1.0.0
+- Initial release.

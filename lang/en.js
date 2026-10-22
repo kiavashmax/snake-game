@@ -34,6 +34,11 @@
         score: 'Score',
         best: 'Best',
         retry: 'Play Again'
+      },
+
+      audio: {
+        on: 'Sound on',
+        off: 'Sound off'
       }
     }
   });

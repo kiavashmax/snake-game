@@ -51,6 +51,8 @@
 
     this.ui.setScore(0);
     this.ui.hideOverlay();
+
+    if (App.Audio) App.Audio.start();
   };
 
   Game.prototype.pause = function () {
@@ -97,6 +99,8 @@
     this.particles.burst(head.x, head.y, cfg.board.cell, cfg.colors.spark, 12);
     this.food.spawn(this.snake);
 
+    if (App.Audio) App.Audio.eat();
+
     if (this.speed < cfg.speed.max) {
       this.speed = Math.min(cfg.speed.max, this.speed + cfg.speed.step);
     }
@@ -113,6 +117,13 @@
       this.best = this.score;
       App.storage.set('best', this.best);
       this.ui.setBest(this.best);
+    }
+
+    if (App.Audio) {
+      App.Audio.die();
+      if (record) {
+        setTimeout(function () { App.Audio.record(); }, 600);
+      }
     }
 
     this.ui.showOverlay('over', {
