@@ -2,7 +2,6 @@
   'use strict';
 
   var handlers = {};
-
   var KEY_DIR = {
     ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
     w: 'up', a: 'left', s: 'down', d: 'right',
@@ -23,26 +22,13 @@
 
   function onKeyDown(e) {
     var dir = KEY_DIR[e.key];
-    if (dir) {
-      e.preventDefault();
-      emit('direction', dir);
-      return;
-    }
-
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      emit('action');
-      return;
-    }
-
-    if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
-      emit('pause');
-    }
+    if (dir) { e.preventDefault(); emit('direction', dir); return; }
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); emit('action'); return; }
+    if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') emit('pause');
   }
 
   function bindDpad(el) {
     if (!el) return;
-
     el.addEventListener('pointerdown', function (e) {
       var btn = e.target.closest('[data-dir]');
       if (!btn) return;
@@ -53,7 +39,6 @@
 
   function bindSwipe(el) {
     if (!el) return;
-
     var drag = null;
     var threshold = App.config.input.swipe;
 
@@ -64,26 +49,16 @@
 
     el.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.id) return;
-
       var dx = e.clientX - drag.x;
       var dy = e.clientY - drag.y;
-
       if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) return;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        emit('direction', dx > 0 ? 'right' : 'left');
-      } else {
-        emit('direction', dy > 0 ? 'down' : 'up');
-      }
-
+      if (Math.abs(dx) > Math.abs(dy)) emit('direction', dx > 0 ? 'right' : 'left');
+      else emit('direction', dy > 0 ? 'down' : 'up');
       drag.x = e.clientX;
       drag.y = e.clientY;
     });
 
-    function release(e) {
-      if (drag && e.pointerId === drag.id) drag = null;
-    }
-
+    function release(e) { if (drag && e.pointerId === drag.id) drag = null; }
     el.addEventListener('pointerup', release);
     el.addEventListener('pointercancel', release);
   }

@@ -5,19 +5,13 @@
   var fallback = {};
 
   function readAll() {
-    try {
-      return JSON.parse(localStorage.getItem(KEY) || '{}') || {};
-    } catch (e) {
-      return fallback;
-    }
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+    catch (e) { return fallback; }
   }
 
   function writeAll(data) {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    } catch (e) {
-      fallback = data;
-    }
+    try { localStorage.setItem(KEY, JSON.stringify(data)); }
+    catch (e) { fallback = data; }
   }
 
   App.storage = {

@@ -18,12 +18,9 @@
     });
 
     game = new App.Game(renderer, ui);
-
     App.Input.init({ stage: stageEl, dpad: dpadEl });
 
-    App.Input.on('direction', function (dir) {
-      game.direction(dir);
-    });
+    App.Input.on('direction', function (dir) { game.direction(dir); });
 
     App.Input.on('action', function () {
       App.Audio.unlock();
@@ -35,9 +32,7 @@
       }
     });
 
-    App.Input.on('pause', function () {
-      game.togglePause();
-    });
+    App.Input.on('pause', function () { game.togglePause(); });
 
     var saved = App.storage.get('lang', null);
     App.i18n.set(App.i18n.has(saved) ? saved : App.i18n.default, true);
@@ -58,18 +53,23 @@
 
     muteBtn.addEventListener('click', function () {
       App.Audio.unlock();
-      App.Audio.toggle();
-      refreshMute();
-      if (!App.Audio.isMuted()) App.Audio.tick();
+      if (App.Audio.isMuted()) {
+        App.Audio.setMuted(false);
+        refreshMute();
+        App.Audio.muteSound(false);
+      } else {
+        App.Audio.muteSound(true);
+        setTimeout(function () {
+          App.Audio.setMuted(true);
+          refreshMute();
+        }, 90);
+      }
     });
 
-    window.addEventListener('pointerdown', function () {
-      App.Audio.unlock();
-    }, { once: true, passive: true });
-
-    window.addEventListener('keydown', function () {
-      App.Audio.unlock();
-    }, { once: true });
+    window.addEventListener('pointerdown', function () { App.Audio.unlock(); },
+      { once: true, passive: true });
+    window.addEventListener('keydown', function () { App.Audio.unlock(); },
+      { once: true });
 
     App.i18n.onChange(refreshMute);
     refreshMute();

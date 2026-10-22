@@ -33,11 +33,9 @@
     this.width = cfg.board.cols * this.cell;
     this.height = cfg.board.rows * this.cell;
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
-
     canvas.width = this.width * this.dpr;
     canvas.height = this.height * this.dpr;
     this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
-
     this.gridLayer = this.buildGrid();
   }
 
@@ -45,11 +43,9 @@
     var off = document.createElement('canvas');
     off.width = this.canvas.width;
     off.height = this.canvas.height;
-
     var g = off.getContext('2d');
     g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     g.fillStyle = 'rgba(212, 175, 55, 0.09)';
-
     var c = this.cell;
     for (var x = 1; x < cfg.board.cols; x++) {
       for (var y = 1; y < cfg.board.rows; y++) {
@@ -61,10 +57,8 @@
 
   Renderer.prototype.draw = function (state) {
     var ctx = this.ctx;
-
     ctx.clearRect(0, 0, this.width, this.height);
     ctx.drawImage(this.gridLayer, 0, 0, this.width, this.height);
-
     this.drawFood(state.food, state.now);
     this.drawSnake(state.snake, state.alpha);
     state.particles.draw(ctx);
@@ -77,15 +71,12 @@
     var cy = food.y * c + c / 2;
     var pulse = Math.sin(now / 220);
     var size = c * 0.3 + pulse * 1.2;
-
     ctx.save();
     ctx.shadowColor = 'rgba(212, 175, 55, 0.9)';
     ctx.shadowBlur = 16 + pulse * 6;
-
     ctx.fillStyle = '#f7e19b';
     diamond(ctx, cx, cy, size, size * 1.15);
     ctx.fill();
-
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#d4af37';
     diamond(ctx, cx, cy, size * 0.42, size * 0.5);
@@ -106,20 +97,16 @@
       var cur = cells[i];
       var old = prev[i] || cur;
       var px, py;
-
       if (Math.abs(cur.x - old.x) > 1 || Math.abs(cur.y - old.y) > 1) {
-        px = cur.x;
-        py = cur.y;
+        px = cur.x; py = cur.y;
       } else {
         px = old.x + (cur.x - old.x) * alpha;
         py = old.y + (cur.y - old.y) * alpha;
       }
-
       var x = px * c + pad;
       var y = py * c + pad;
       var isHead = i === 0;
       var fade = 1 - (i / Math.max(count, 1)) * 0.45;
-
       var grad = ctx.createLinearGradient(x, y, x + size, y + size);
       if (isHead) {
         grad.addColorStop(0, '#fff6d0');
@@ -128,7 +115,6 @@
         grad.addColorStop(0, 'rgba(212, 175, 55, ' + (0.92 * fade) + ')');
         grad.addColorStop(1, 'rgba(118, 96, 46, ' + (0.92 * fade) + ')');
       }
-
       ctx.save();
       if (isHead) {
         ctx.shadowColor = 'rgba(212, 175, 55, 0.85)';
@@ -138,7 +124,6 @@
       ctx.fillStyle = grad;
       ctx.fill();
       ctx.restore();
-
       if (isHead) this.drawEyes(x, y, size, snake.dir);
     }
   };
@@ -150,7 +135,6 @@
     var ox = -dir.y * size * 0.19;
     var oy = dir.x * size * 0.19;
     var r = size * 0.085;
-
     ctx.fillStyle = '#0a0a12';
     ctx.beginPath();
     ctx.arc(cx + ox, cy + oy, r, 0, Math.PI * 2);

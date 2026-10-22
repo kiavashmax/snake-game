@@ -4,10 +4,9 @@
   var dom = {};
   var actions = {};
   var overlayState = { kind: 'menu', score: 0, best: 0, record: false };
+  var lastHover = 0;
 
-  function byId(id) {
-    return document.getElementById(id);
-  }
+  function byId(id) { return document.getElementById(id); }
 
   function cache() {
     dom.score = byId('score');
@@ -20,10 +19,26 @@
     dom.langs = byId('langs');
   }
 
+  function hoverSound() {
+    var now = Date.now();
+    if (now - lastHover < 90) return;
+    lastHover = now;
+    if (App.Audio) App.Audio.hover();
+  }
+
+  function clickSound() {
+    if (App.Audio) { App.Audio.unlock(); App.Audio.click(); }
+  }
+
+  function wireButtonSounds(el) {
+    if (!el) return;
+    el.addEventListener('mouseenter', hoverSound);
+    el.addEventListener('pointerdown', clickSound);
+  }
+
   function renderOverlay() {
     var t = App.i18n.t;
     var s = overlayState;
-
     if (s.kind === 'menu') {
       dom.title.textContent = t('menu.title');
       dom.text.textContent = t('menu.hint');
@@ -48,20 +63,17 @@
 
   function renderLanguages() {
     dom.langs.innerHTML = '';
-
     App.i18n.list().forEach(function (code) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'lang';
       btn.textContent = App.i18n.pack(code).name || code;
       btn.setAttribute('lang', code);
-
       if (code === App.i18n.current) btn.classList.add('is-active');
-
       btn.addEventListener('click', function () {
         if (actions.onLanguage) actions.onLanguage(code);
       });
-
+      wireButtonSounds(btn);
       dom.langs.appendChild(btn);
     });
   }
@@ -79,6 +91,10 @@
           if (actions.onStart) actions.onStart();
         }
       });
+      wireButtonSounds(dom.button);
+
+      var extraButtons = document.querySelectorAll('.dpad__btn, .mute');
+      for (var i = 0; i < extraButtons.length; i++) wireButtonSounds(extraButtons[i]);
 
       App.i18n.onChange(function () {
         renderLanguages();
@@ -89,13 +105,8 @@
       renderOverlay();
     },
 
-    setScore: function (value) {
-      dom.score.textContent = value;
-    },
-
-    setBest: function (value) {
-      dom.best.textContent = value;
-    },
+    setScore: function (value) { dom.score.textContent = value; },
+    setBest: function (value) { dom.best.textContent = value; },
 
     showOverlay: function (kind, data) {
       data = data || {};
@@ -103,13 +114,10 @@
       overlayState.score = data.score || 0;
       overlayState.best = data.best || 0;
       overlayState.record = !!data.record;
-
       renderOverlay();
       dom.overlay.classList.remove('is-hidden');
     },
 
-    hideOverlay: function () {
-      dom.overlay.classList.add('is-hidden');
-    }
+    hideOverlay: function () { dom.overlay.classList.add('is-hidden'); }
   };
 })(window.App = window.App || {});
