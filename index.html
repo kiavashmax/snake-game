@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05050a">
+<title>Magic Serpent</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="hud">
+  <div class="hud__item">
+    <span class="hud__label" data-i18n="hud.score">Score</span>
+    <span class="hud__value" id="score">0</span>
+  </div>
+  <div class="hud__item">
+    <span class="hud__label" data-i18n="hud.best">Best</span>
+    <span class="hud__value" id="best">0</span>
+  </div>
+</header>
+
+<main class="stage">
+  <canvas id="board" width="600" height="600"></canvas>
+</main>
+
+<nav class="dpad" id="dpad">
+  <button class="dpad__btn dpad__btn--up"    type="button" data-dir="up">&#9650;</button>
+  <button class="dpad__btn dpad__btn--left"  type="button" data-dir="left">&#9664;</button>
+  <button class="dpad__btn dpad__btn--right" type="button" data-dir="right">&#9654;</button>
+  <button class="dpad__btn dpad__btn--down"  type="button" data-dir="down">&#9660;</button>
+</nav>
+
+<div class="overlay" id="overlay">
+  <div class="overlay__panel">
+    <h1 class="overlay__title" id="overlayTitle">Magic Serpent</h1>
+    <p class="overlay__text" id="overlayText"></p>
+    <div class="overlay__score is-hidden" id="overlayScore"></div>
+    <button class="btn" id="overlayBtn" type="button">Start</button>
+  </div>
+</div>
+
+<div class="langs" id="langs"></div>
+
+<script src="js/core/config.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/i18n.js"></script>
+
+<script src="lang/en.js"></script>
+<script src="lang/fa.js"></script>
+
+<script src="js/core/input.js"></script>
+<script src="js/game/snake.js"></script>
+<script src="js/game/food.js"></script>
+<script src="js/game/particles.js"></script>
+<script src="js/game/renderer.js"></script>
+<script src="js/game/game.js"></script>
+
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
